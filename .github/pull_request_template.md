@@ -8,4 +8,4 @@
 
 ## Checklist
 
-- [ ] `README.md` is updated.
+- [ ] `README.md` is updated if applicable
