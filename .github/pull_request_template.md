@@ -8,4 +8,5 @@
 
 ## Checklist
 
+- [ ] `CHANGELOG.md` is updated if applicable
 - [ ] `README.md` is updated if applicable
