@@ -1,0 +1,48 @@
+name: Main
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  Build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        java: ['8', '11']
+        exclude:
+          - os: windows-latest
+            java: '11'
+        include:
+          - os: ubuntu-latest
+            script: ./mvnw
+          - os: windows-latest
+            script: .\mvnw.cmd
+    runs-on: ${{ matrix.os }}
+    permissions:
+      checks: write
+    env:
+      MAVEN_CMD: ${{ matrix.script }} --batch-mode --show-version --errors --no-transfer-progress --update-snapshots
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+      - name: Set up Java
+        uses: actions/setup-java@v2.1.0
+        with:
+          java-version: ${{ matrix.java }}
+          distribution: adopt
+      - name: Cache Maven Packages
+        uses: actions/cache@v2.1.5
+        with:
+          key: ${{ matrix.os }}-java${{ matrix.java }}-m2-${{ hashFiles('.mvn/wrapper/maven-wrapper.properties', 'pom.xml') }}
+          path: |
+            ~/.m2/repository
+            ~/.m2/wrapper/dists
+      - name: Build
+        run: ${{ env.MAVEN_CMD }} -Penable-jacoco clean package
+      - name: Publish Test Report
+        uses: scacap/action-surefire-report@v1.0.9
+        with:
+          check_name: Test Report (${{ matrix.os }}, ${{ matrix.java }})
