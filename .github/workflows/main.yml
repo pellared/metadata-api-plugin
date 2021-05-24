@@ -20,14 +20,26 @@ jobs:
             script: ./mvnw
           - os: windows-latest
             script: .\mvnw.cmd
+          - os: ubuntu-latest
+            java: '11'
+            sonar: true
     runs-on: ${{ matrix.os }}
     permissions:
       checks: write
     env:
       MAVEN_CMD: ${{ matrix.script }} --batch-mode --show-version --errors --no-transfer-progress --update-snapshots
     steps:
+      - name: Determine Checkout Depth
+        uses: haya14busa/action-cond@v1.0.2
+        id: fetchDepth
+        with:
+          cond: ${{ matrix.sonar == true }}
+          if_true: '0'
+          if_false: '1'
       - name: Checkout
         uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: ${{ steps.fetchDepth.outputs.value }}
       - name: Set up Java
         uses: actions/setup-java@v2.1.0
         with:
@@ -46,3 +58,14 @@ jobs:
         uses: scacap/action-surefire-report@v1.0.9
         with:
           check_name: Test Report (${{ matrix.os }}, ${{ matrix.java }})
+      - name: Cache SonarCloud Packages
+        if: ${{ matrix.sonar }}
+        uses: actions/cache@v2.1.5
+        with:
+          key: ${{ matrix.os }}-java${{ matrix.java }}-sonar
+          path: ~/.sonar/cache
+      - name: Execute SonarScanner
+        if: ${{ matrix.sonar }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ${{ env.MAVEN_CMD }} sonar:sonar -Dsonar.login=${{ secrets.SONAR_TOKEN }}

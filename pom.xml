@@ -46,6 +46,9 @@
     <gitHubRepo>agabrys</gitHubRepo>
     <jenkins.version>2.277.1</jenkins.version>
     <java.level>8</java.level>
+    <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+    <sonar.organization>agabrys</sonar.organization>
+    <sonar.sources>pom.xml,src/main</sonar.sources>
   </properties>
 
   <repositories>
