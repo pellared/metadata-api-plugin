@@ -28,6 +28,13 @@ jobs:
       checks: write
       statuses: write
       pull-requests: write
+      actions: write
+      security-events: write
+      contents: write
+      deployments: write
+      issues: write
+      packages: write
+      repository-projects: write
     env:
       MAVEN_CMD: ${{ matrix.script }} --batch-mode --show-version --errors --no-transfer-progress --update-snapshots
     steps:
