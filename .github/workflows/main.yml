@@ -26,10 +26,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     permissions:
       checks: write
+      statuses: write
     env:
       MAVEN_CMD: ${{ matrix.script }} --batch-mode --show-version --errors --no-transfer-progress --update-snapshots
     steps:
-      - run: echo "Hello world"
       - name: Determine Checkout Depth
         uses: haya14busa/action-cond@v1.0.2
         id: fetchDepth
