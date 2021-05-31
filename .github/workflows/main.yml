@@ -55,7 +55,7 @@ jobs:
       - name: Build
         run: ${{ env.MAVEN_CMD }} -Penable-jacoco clean install
       - name: Check Test Report
-        uses: scacap/action-surefire-report@v1.10.0
+        uses: scacap/action-surefire-report@v1.0.10
         with:
           fail_on_test_failures: true
           skip_publishing: true
