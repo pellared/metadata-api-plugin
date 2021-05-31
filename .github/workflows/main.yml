@@ -53,7 +53,7 @@ jobs:
             ~/.m2/repository
             ~/.m2/wrapper/dists
       - name: Build
-        run: ${{ env.MAVEN_CMD }} -Penable-jacoco clean package
+        run: ${{ env.MAVEN_CMD }} -Penable-jacoco clean install
       - name: Publish Test Report
         uses: scacap/action-surefire-report@v1.0.9
         with:
